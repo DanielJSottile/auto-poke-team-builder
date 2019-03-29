@@ -137,12 +137,16 @@ def main():
     print('\n')
     print(pokemon_setlist)
 
-    # 2 problems so far:
-    # first, if EVs: or IVs: is in the nickname, it messes up the output
-    # second, for some odd reason it's appending to the list even if
-    # all 4 moveslots have something in them.  Does not affect
-    # output, but it means something is not right.
+    # possible fixes:
+    # lines 23-42 could be something like this:
+    # moves = []
+    # for line in lines[1:]:
+        # if line.startswith('- '):
+            # moves.append(line[2:])
+    # for _ in range(4 - len(moves)):
+    # moves.append('None')
 
+    #in the future this will return those values and create a database
 
 if __name__ == '__main__':
     exit(main())
