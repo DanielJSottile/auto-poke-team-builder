@@ -16,31 +16,35 @@ def main():
     if pokemon_setlist[3] == 'Shiny: Yes  ':
         del pokemon_setlist[3]
 
+    # sets happiness to 255 if not included
+    if not any("Happiness:" in lines for lines in pokemon_setlist[1:]):
+        pokemon_setlist.insert(3, "Level: 100")
+
     # sets EV's to none if not included
     if not any("EVs:" in lines for lines in pokemon_setlist[1:]):
-        pokemon_setlist.insert(3, "EVs: None")
+        pokemon_setlist.insert(4, "EVs: None")
 
     # sets IV's to none if not included
     if not any("IVs: " in lines for lines in pokemon_setlist[1:]):
-        pokemon_setlist.insert(5, "IVs: None")
+        pokemon_setlist.insert(6, "IVs: None")
 
     # sets move 2 to none if not included
     try:
-        gotmove2 = pokemon_setlist[7]
+        gotmove2 = pokemon_setlist[8]
     except IndexError:
         gotmove2 = '- None'
         pokemon_setlist.append(gotmove2)
 
     # sets move 3 to none if not included
     try:
-        gotmove3 = pokemon_setlist[8]
+        gotmove3 = pokemon_setlist[9]
     except IndexError:
         gotmove3 = '- None'
         pokemon_setlist.append(gotmove3)
 
     # sets move 4 to none if not included
     try:
-        gotmove4 = pokemon_setlist[9]
+        gotmove4 = pokemon_setlist[10]
     except IndexError:
         gotmove4 = '- None'
         pokemon_setlist.append(gotmove4)
@@ -80,8 +84,17 @@ def main():
     else:
         level = '100'    
 
+    # search for the happiness after Happiness:
+    h = pokemon_setlist[3]
+    HAPPINESS_NUM_RE = re.compile(r'Happiness: (.*)')
+
+    if HAPPINESS_NUM_RE.match(h):
+        happiness, = HAPPINESS_NUM_RE.match(h).groups()
+    else:
+        happiness = '255'
+
     # search for the EV string after EVs:
-    e = pokemon_setlist[3]
+    e = pokemon_setlist[4]
     EV_STRING_RE = re.compile(r'EVs: (.*)')
 
     if EV_STRING_RE.match(e):
@@ -90,7 +103,7 @@ def main():
         ev = 'None'
 
     # search for the nature name before the word Nature
-    n = pokemon_setlist[4]
+    n = pokemon_setlist[5]
     NATURE_NAME_RE = re.compile(r'^(.*) Nature')
 
     if NATURE_NAME_RE.match(n):
@@ -99,7 +112,7 @@ def main():
         nature = 'none'
 
     # search for the IV string after IVs:
-    i = pokemon_setlist[5]
+    i = pokemon_setlist[6]
     IV_STRING_RE = re.compile(r'^IVs: (.*)')
 
     if IV_STRING_RE.match(i):
@@ -109,10 +122,10 @@ def main():
 
     # separate the moves, find them after - , strip them, then put them
     # into a new list by itself
-    m1 = pokemon_setlist[6]
-    m2 = pokemon_setlist[7]
-    m3 = pokemon_setlist[8]
-    m4 = pokemon_setlist[9]
+    m1 = pokemon_setlist[7]
+    m2 = pokemon_setlist[8]
+    m3 = pokemon_setlist[9]
+    m4 = pokemon_setlist[10]
     
     print(m1)
 
@@ -127,6 +140,7 @@ def main():
     item = item.strip()
     ability = ability.strip()
     level = level.strip()
+    happiness = happiness.strip()
     ev = ev.strip()
     nature = nature.strip()
     iv = iv.strip()
@@ -147,6 +161,7 @@ def main():
     print(item)
     print(ability)
     print(level)
+    print(happiness)
     print(ev)
     print(nature)
     print(iv)
@@ -154,6 +169,10 @@ def main():
     print('\n')
     print(pokemon_setlist)
 
+    # current errors:
+    # if you select the pokemon as always being Male or Female,
+    # it will use (M) or (F) in the list and break this program
+    # need to check if the thing in parentheses is more than 1 character.
     # possible fixes:
     # lines 23-42 could be something like this:
     # moves = []
