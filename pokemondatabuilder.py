@@ -8,35 +8,39 @@ def main():
 
     pokemon_setlist = pokemon_set.splitlines()  # this splits by line into list
 
+    # sets level to 100 if not included
+    if not any("Level:" in lines for lines in pokemon_setlist[1:]):
+        pokemon_setlist.insert(2, "Level: 100")
+    
     # this deletes that if it contains it, because we dont need it.
-    if pokemon_setlist[2] == 'Shiny: Yes  ':
-        del pokemon_setlist[2]
+    if pokemon_setlist[3] == 'Shiny: Yes  ':
+        del pokemon_setlist[3]
 
     # sets EV's to none if not included
     if not any("EVs:" in lines for lines in pokemon_setlist[1:]):
-        pokemon_setlist.insert(2, "EVs: None")
+        pokemon_setlist.insert(3, "EVs: None")
 
     # sets IV's to none if not included
     if not any("IVs: " in lines for lines in pokemon_setlist[1:]):
-        pokemon_setlist.insert(4, "IVs: None")
+        pokemon_setlist.insert(5, "IVs: None")
 
     # sets move 2 to none if not included
     try:
-        gotmove2 = pokemon_setlist[6]
+        gotmove2 = pokemon_setlist[7]
     except IndexError:
         gotmove2 = '- None'
         pokemon_setlist.append(gotmove2)
 
     # sets move 3 to none if not included
     try:
-        gotmove3 = pokemon_setlist[7]
+        gotmove3 = pokemon_setlist[8]
     except IndexError:
         gotmove3 = '- None'
         pokemon_setlist.append(gotmove3)
 
     # sets move 4 to none if not included
     try:
-        gotmove4 = pokemon_setlist[8]
+        gotmove4 = pokemon_setlist[9]
     except IndexError:
         gotmove4 = '- None'
         pokemon_setlist.append(gotmove4)
@@ -67,8 +71,17 @@ def main():
     else:
         ability = 'None'
 
+    # search for the level after Level:
+    l = pokemon_setlist[2]
+    LEVEL_NUM_RE = re.compile(r'Level: (.*)')
+
+    if LEVEL_NUM_RE.match(l):
+        level, = LEVEL_NUM_RE.match(l).groups()
+    else:
+        level = '100'    
+
     # search for the EV string after EVs:
-    e = pokemon_setlist[2]
+    e = pokemon_setlist[3]
     EV_STRING_RE = re.compile(r'EVs: (.*)')
 
     if EV_STRING_RE.match(e):
@@ -77,7 +90,7 @@ def main():
         ev = 'None'
 
     # search for the nature name before the word Nature
-    n = pokemon_setlist[3]
+    n = pokemon_setlist[4]
     NATURE_NAME_RE = re.compile(r'^(.*) Nature')
 
     if NATURE_NAME_RE.match(n):
@@ -86,7 +99,7 @@ def main():
         nature = 'none'
 
     # search for the IV string after IVs:
-    i = pokemon_setlist[4]
+    i = pokemon_setlist[5]
     IV_STRING_RE = re.compile(r'^IVs: (.*)')
 
     if IV_STRING_RE.match(i):
@@ -96,10 +109,12 @@ def main():
 
     # separate the moves, find them after - , strip them, then put them
     # into a new list by itself
-    m1 = pokemon_setlist[5]
-    m2 = pokemon_setlist[6]
-    m3 = pokemon_setlist[7]
-    m4 = pokemon_setlist[8]
+    m1 = pokemon_setlist[6]
+    m2 = pokemon_setlist[7]
+    m3 = pokemon_setlist[8]
+    m4 = pokemon_setlist[9]
+    
+    print(m1)
 
     MOVE_NAME_RE = re.compile(r'^- (.*)')
     move1, = MOVE_NAME_RE.match(m1).groups()
@@ -111,6 +126,7 @@ def main():
     species = species.strip()
     item = item.strip()
     ability = ability.strip()
+    level = level.strip()
     ev = ev.strip()
     nature = nature.strip()
     iv = iv.strip()
@@ -130,6 +146,7 @@ def main():
     print(species)
     print(item)
     print(ability)
+    print(level)
     print(ev)
     print(nature)
     print(iv)
