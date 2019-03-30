@@ -18,7 +18,7 @@ def main():
 
     # sets happiness to 255 if not included
     if not any("Happiness:" in lines for lines in pokemon_setlist[1:]):
-        pokemon_setlist.insert(3, "Level: 100")
+        pokemon_setlist.insert(3, "Happiness: 255")
 
     # sets EV's to none if not included
     if not any("EVs:" in lines for lines in pokemon_setlist[1:]):
