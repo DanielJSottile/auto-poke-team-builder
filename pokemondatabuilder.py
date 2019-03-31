@@ -51,16 +51,24 @@ def main():
 
     # need to search in [0] the species inside the () from end of list, return
     s = pokemon_setlist[0]
+    NICKNAME_GEN_AND_ITEM_RE = re.compile(r'^.*\((.*)\) \(([MF])\) @ (.*) $')
     NICKNAME_AND_ITEM_RE = re.compile(r'^.*\((.*)\) @ (.*) $')
-    NICKNAME_NO_ITEM_RE = re.compile(r'^.*\((.*)\)')
-    NO_NICKNAME_AND_ITEM_RE = re.compile(r'^(.*) @ (.*)')
+    NICKNAME_GEN_NO_ITEM_RE = re.compile(r'^.*\((.*)\) \(([MF])\)$')
+    NICKNAME_NO_ITEM_RE = re.compile(r'^.*\((.*)\)$')
+    NO_NICKNAME_GEN_AND_ITEM_RE = re.compile(r'^(.*) \(([MF])\) @ (.*) $')
+    NO_NICKNAME_AND_ITEM_RE = re.compile(r'^(.*) @ (.*) $')
 
     item = 'none'
+    gender = 'any'
 
-    if NICKNAME_AND_ITEM_RE.match(s):
-        species, item = NICKNAME_AND_ITEM_RE.match(s).groups()
-    elif NICKNAME_NO_ITEM_RE.match(s):
-        species, = NICKNAME_NO_ITEM_RE.match(s).groups()
+    if NICKNAME_GEN_AND_ITEM_RE.match(s):
+        species, gender, item = NICKNAME_GEN_AND_ITEM_RE.match(s).groups()
+    elif NICKNAME_AND_ITEM_RE.match(s):
+        species, item = NICKNAME_AND_ITEM.match(s).groups()
+    elif NICKNAME_GEN_NO_ITEM_RE.match(s):
+        species, gender = NICKNAME_GEN_NO_ITEM_RE.match(s).groups()
+    elif NO_NICKNAME_GEN_AND_ITEM_RE.match(s):
+        species, gender, item = NO_NICKNAME_GEN_AND_ITEM_RE.match(s).groups()
     elif NO_NICKNAME_AND_ITEM_RE.match(s):
         species, item = NO_NICKNAME_AND_ITEM_RE.match(s).groups()
     else:
@@ -137,6 +145,7 @@ def main():
 
     # strip everything of trailing and leading whitespaces first
     species = species.strip()
+    gender = gender.strip()
     item = item.strip()
     ability = ability.strip()
     level = level.strip()
@@ -158,6 +167,7 @@ def main():
     # print everything.  Later, return to a database
     print('\n')
     print(species)
+    print(gender)
     print(item)
     print(ability)
     print(level)
@@ -169,9 +179,7 @@ def main():
     print('\n')
     print(pokemon_setlist)
 
-    # current errors:
-    # if you select the pokemon as always being Male or Female,
-    # it will use (M) or (F) in the list and break this program
+    
     # need to check if the thing in parentheses is more than 1 character.
     # possible fixes:
     # lines 23-42 could be something like this:
